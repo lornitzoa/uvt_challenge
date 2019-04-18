@@ -1,10 +1,49 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en" dir="ltr" ng-app='UVTApp'>
   <head>
+
     <meta charset="utf-8">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.2/angular.min.js" charset="utf-8"></script>
+    <script src="app.js" charset="utf-8"></script>
     <title></title>
   </head>
-  <body>
-    
+  <body ng-controller='MainController as ctrl'>
+    <h1>Unique View Time</h1>
+    <form ng-submit='ctrl.submitDuration()'>
+      <label for="duration">Video Duration</label>
+      <br/>
+      <label for="start-hh">hh</label>
+      <label for="start-mm">mm</label>
+      <label for="start-ss">ss</label>
+      <br/>
+      <input type="text" name="start-hh" ng-model='ctrl.durationHH'>:
+      <input type="text" name="start-mm" ng-model='ctrl.durationMM' min=0 max='59'>:
+      <input type="text" name="start-ss" ng-model='ctrl.durationSS' min=0 max='59'>
+      <input type="submit" name="submit" value="Submit">
+    </form>
+    <form class="" action="index.html" method="post">
+      <label for="vf-start">Start Time:</label>
+      <br/>
+      <label for="start-hh">hh</label>
+      <label for="start-mm">mm</label>
+      <label for="start-ss">ss</label>
+      <br/>
+      <input type="text" name="start-hh" ng-model=ctrl.startHH>:
+      <input type="text" name="start-mm" ng-model=ctrl.startMM min=0 max='59'>:
+      <input type="text" name="start-ss" ng-model=ctrl.startSS min=0 max='59'>
+      <br/>
+      <label for="vf-end">End Time:</label>
+      <br/>
+      <label for="end-hh">hh</label>
+      <label for="end-mm">mm</label>
+      <label for="end-ss">ss</label>
+      <br/>
+      <input type="text" name="start-hh" ng-model=ctrl.endHH>:
+      <input type="text" name="start-mm" ng-model=ctrl.endMM min=0 max='59'>:
+      <input type="text" name="start-ss" ng-model=ctrl.endSS min=0 max='59'>
+      <input type="submit" name="submit" value="Submit">
+    </form>
+    <h2>Unique View Time: {{ ctrl.uvt }}</h2>
+
   </body>
 </html>
