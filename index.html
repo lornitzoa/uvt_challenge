@@ -3,7 +3,7 @@
   <head>
 
     <meta charset="utf-8">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.2/angular.min.js" charset="utf-8"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular.min.js"></script>
     <script src="app.js" charset="utf-8"></script>
     <title></title>
   </head>
@@ -21,7 +21,7 @@
       <input type="text" name="start-ss" ng-model='ctrl.durationSS' min=0 max='59'>
       <input type="submit" name="submit" value="Submit">
     </form>
-    <form class="" action="index.html" method="post">
+    <form ng-submit='ctrl.submitVF()'">
       <label for="vf-start">Start Time:</label>
       <br/>
       <label for="start-hh">hh</label>
