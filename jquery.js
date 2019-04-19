@@ -54,14 +54,18 @@ $( () => {
 
   // updated timeElapsed element when slider is moved
   updateTimerVal = (val) => {
+
     m = val.slice(-7, -5)
     s = val.slice(-5, -3)
     ms = val.slice(-3)
     $('#timeElapsed').text(formatTime(m, s, ms, 'string'))
-    console.log(m)
-    console.log(s);
     rangeVal = parseInt(`${m}${s}${ms}`)
     $('#range')[0].value = rangeVal
+    currentLocation = formatTime(m, s, ms, 'number')
+
+    // let vfObj = {startTime: currentLocation}
+    // vf.push(vfObj)
+    // console.log(vf);
   }
 
 
@@ -122,7 +126,6 @@ $( () => {
       if(play === false) { // start timer for video
         vfObj.startTime = currentLocation
         vf.push(vfObj)
-        console.log(vf);
         handleTimer = setInterval(timer, 1)
         $('#stopStart').text('||')
         play = true
