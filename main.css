@@ -1,9 +1,9 @@
 .sliderWrapper {
-  width: 100%
+
 }
 
 .range {
-  width: 100%;
+  width: 1000px;
   height: 15px;
   background: purple;
   outline: none;

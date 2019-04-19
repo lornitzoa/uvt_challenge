@@ -21,14 +21,10 @@
   <body ng-controller='MainController as ctrl'>
     <h1>Unique View Time</h1>
     <form id='vidLength'>
-      <h2>Video Length</h2>
-      <label for="vidMMS">minutes</label>
-      <label for="vidSS">seconds</label>
-      <label for="vidMS">milliseconds</label>
-      <br/>
-      <input type="text" inputmode="numberic" pattern="[0-9]*" id='vidMM' min='0' max='59'>
-      <input type="text" inputmode="numberic" pattern="[0-9]*" id='vidSS' min='0' max='59'>
-      <input type="text" inputmode="numberic" pattern="[0-9]*" id='vidMS' min='0' max='999'>
+      <h2>Load Video</h2>
+      <input type="text" inputmode="numberic" pattern="[0-9]*" id='vidMM' min='0' max='59' placeholder="minutes">
+      <input type="text" inputmode="numberic" pattern="[0-9]*" id='vidSS' min='0' max='59' placeholder="seconds">
+      <input type="text" inputmode="numberic" pattern="[0-9]*" id='vidMS' min='0' max='999' placeholder="milliseconds">
       <input type="submit" name="" value="Submit">
     </form>
     <div class="sliderWrapper">
