@@ -26,13 +26,13 @@
       <label for="vidSS">seconds</label>
       <label for="vidMS">milliseconds</label>
       <br/>
-      <input type="number" id='vidMM' min='0' max='59'>
-      <input type="number" id='vidSS' min='0' max='59'>
-      <input type="number" id='vidMS' min='0' max='999'>
+      <input type="text" inputmode="numberic" pattern="[0-9]*" id='vidMM' min='0' max='59'>
+      <input type="text" inputmode="numberic" pattern="[0-9]*" id='vidSS' min='0' max='59'>
+      <input type="text" inputmode="numberic" pattern="[0-9]*" id='vidMS' min='0' max='999'>
       <input type="submit" name="" value="Submit">
     </form>
     <div class="sliderWrapper">
-      <input type="range" min='0' max='' value='0' id='range'>
+      <input type="range" min='0' max='' value='0' id='range' onchange="updateTimerVal(this.value)">
       <p id='timeElapsed'></p>
       <p id='vidLength'></p>
       <button type="button" id="stopStart">></button>

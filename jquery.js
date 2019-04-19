@@ -4,15 +4,18 @@ $( () => {
   ////////////////////////////////////////
 
   let uvt = 0 // unique view time
-  let vidLength = '0' // video length
-  let vidTimeString = 0
-  let currentLocation = 0 // current location of video
+  let vidTimeString = '0' // video length
+  let vidTimeNumber = 0
+  let handleTimer = 0 // timer placeholder
   let rangeVal = 0 // current location value for range element
   let d = new Date(`2018-04-15T00:00:00`)
   let m = 0 // minutes variable
   let s = 0 // seconds variable
   let ms = 0 // milliseconds variable
   let play = false // whether video is playing or not
+  let currentLocation = 0
+
+  let vf = [] // video fragments
 
   $('#uvt').append(uvt)
   $('#range').attr('value', rangeVal)
@@ -41,9 +44,46 @@ $( () => {
         m++
       }
     }
-    $('#timeElapsed').text(`${m}:${s}`)
+    // set timeElapsed element; send time increments to checkTimeInputs for formatting
+    $('#timeElapsed').text(checkTimeInputs(m.toString(), s.toString(), ms.toString()))
     rangeVal = parseInt(`${m}${s}`)
     $('#range')[0].value = rangeVal
+
+  }
+
+  // updated timeElapsed element when slider is moved
+  updateTimerVal = (val) => {
+    m = val.slice(-7, -5)
+    s = val.slice(-5, -3)
+    ms = val.slice(-3)
+    $('#timeElapsed').text(checkTimeInputs(m, s, ms))
+  }
+
+  // check formatting of video length inputs
+  const checkTimeInputs = (m, s, ms) => {
+    if(m.length < 1) {
+      m = '00'
+    }
+    if(m.length < 2) {
+      m = '0' + m
+    }
+    if(s.length < 1) {
+      s = '00'
+    }
+    if(s.length < 2) {
+      s = '0' + s
+    }
+    if(ms.length < 1) {
+      ms = '000'
+    }
+    if(ms.length < 2) {
+      ms = '00' + ms
+    }
+    if(ms.length < 3) {
+      ms = '0' + ms
+    }
+    timeString = `${m}:${s}.${ms}` // set timeString variable
+    return timeString
   }
 
   ////////////////////////////////////////
@@ -56,31 +96,31 @@ $( () => {
     let m = $('#vidMM')[0].value // variable holds minutes input
     let s = $('#vidSS')[0].value // variable holds seconds input
     let ms = $('#vidMS')[0].value // variable holds milliseconds input
-    vidLength = `${m}:${s}.${ms}` // set vidLength variable
-    let vidTime = new Date(`2018-04-15T00:${vidLength}`) // set date value for timer manipulation
-    vidTimeString = `${vidTime.getMinutes()}${vidTime.getSeconds()}${vidTime.getMilliseconds()}`
-    $('#range').attr('max', parseInt(vidTimeString))
-    // console.log($('#range').attr('max'));
-    $('#vidLength').text(vidLength)
+    vidTimeNumber = new Date(`2018-04-15T00:${checkTimeInputs(m, s, ms)}`) // set date value for timer manipulation
+    vidTimeNumber = parseInt(`${vidTimeNumber.getMinutes()}${vidTimeNumber.getSeconds()}${vidTimeNumber.getMilliseconds()}`)
+    $('#range').attr('max', vidTimeNumber)
+    $('#vidLength').text(vidTimeString)
   })
 
   // handle start stop of timer
   $('#stopStart').on('click', (e) => {
-      if(play === false) {
-        currentLocation = setInterval(timer, 1)
+      if(play === false) { // start timer for video
+        console.log(rangeVal)
+        handleTimer = setInterval(timer, 1)
         $('#stopStart').text('||')
         play = true
-      } else if(play === true) {
-        clearInterval(currentLocation)
+      } else if(play === true) { // stop timer for video
+        clearInterval(handleTimer)
         $('#stopStart').text('>')
         play = false
+        console.log(rangeVal)
       }
     }
   )
 
   // handle restart of timer
   $('#restart').on('click', (e) => {
-    clearInterval(currentLocation)
+    clearInterval(handleTimer)
     d = new Date(`2018-04-15T00:00:00`)
     m = 0
     s = 0
