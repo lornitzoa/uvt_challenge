@@ -32,8 +32,7 @@ $( () => {
       }
     }
     $('#timeElapsed').text(`${m}:${s}`)
-    rangeVal = parseInt(`${m}${s}${ms}`)
-    console.log(rangeVal)
+    rangeVal = parseInt(`${m}${s}`)
     $('#range')[0].value = rangeVal
     // rangeVal += 1000
     // // console.log(rangeVal)

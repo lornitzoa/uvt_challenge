@@ -1,13 +1,13 @@
 .sliderWrapper {
-  width: 80%
+  width: 100%
 }
 
-.slider {
+.range {
   width: 100%;
   height: 15px;
   background: purple;
   outline: none;
-  transition: .1s;
+  transition: .004s;
 }
 
 .slider::-webkit-slider-thumb {
