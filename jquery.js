@@ -16,7 +16,8 @@ $( () => {
   let currentLocation = 0
 
   let vf = [] // video fragments
-
+  // let vfID = 0
+  let vfIndex = 0
   $('#uvt').append(uvt)
   $('#range').attr('value', rangeVal)
 
@@ -44,6 +45,7 @@ $( () => {
         m++
       }
     }
+    currentLocation = parseInt(`${m}${s}${ms}`)
     // set timeElapsed element; send time increments to checkTimeInputs for formatting
     $('#timeElapsed').text(checkTimeInputs(m.toString(), s.toString(), ms.toString()))
     rangeVal = parseInt(`${m}${s}`)
@@ -104,16 +106,23 @@ $( () => {
 
   // handle start stop of timer
   $('#stopStart').on('click', (e) => {
+      let vfObj = {}
       if(play === false) { // start timer for video
-        console.log(rangeVal)
+        vfObj.startTime = currentLocation
+        vf.push(vfObj)
+        console.log(vf);
         handleTimer = setInterval(timer, 1)
         $('#stopStart').text('||')
         play = true
+
+
       } else if(play === true) { // stop timer for video
         clearInterval(handleTimer)
         $('#stopStart').text('>')
         play = false
-        console.log(rangeVal)
+        vf[vfIndex].endTime = currentLocation
+        vfIndex ++
+        console.log(vf);
       }
     }
   )
