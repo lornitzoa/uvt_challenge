@@ -19,7 +19,7 @@ $( () => {
   // let vfID = 0
   let vfIndex = 0
   $('#uvt').append(uvt)
-  $('#range').attr('value', rangeVal)
+  // $('#range').attr('value', rangeVal)
 
 
 
@@ -29,8 +29,9 @@ $( () => {
 
   // handles timer which represents playing of video
   const timer = () => {
+    // console.log(currentLocation);
     // increment milliseconds up to 999
-    if (ms < 999) {
+    if (ms < 995) {
       ms+= 4 // millisecond incrementation per interval >> after testing, 4 seemed to be the best increment for having the timer close to actual duration of one second.
     } else {
       // reset milliseconds to 0 after reaching 99
@@ -45,12 +46,10 @@ $( () => {
         m++
       }
     }
-    currentLocation = parseInt(`${m}${s}${ms}`)
-    // set timeElapsed element; send time increments to checkTimeInputs for formatting
-    $('#timeElapsed').text(checkTimeInputs(m.toString(), s.toString(), ms.toString()))
-    rangeVal = parseInt(`${m}${s}`)
+    currentLocation = (formatTime(m.toString(), s.toString(), ms.toString(), 'number'))
     $('#range')[0].value = rangeVal
-
+    // set timeElapsed element; send time increments to formatTime for formatting
+    $('#timeElapsed').text(formatTime(m.toString(), s.toString(), ms.toString(), 'string'))
   }
 
   // updated timeElapsed element when slider is moved
@@ -58,11 +57,17 @@ $( () => {
     m = val.slice(-7, -5)
     s = val.slice(-5, -3)
     ms = val.slice(-3)
-    $('#timeElapsed').text(checkTimeInputs(m, s, ms))
+    $('#timeElapsed').text(formatTime(m, s, ms, 'string'))
+    console.log(m)
+    console.log(s);
+    rangeVal = parseInt(`${m}${s}${ms}`)
+    $('#range')[0].value = rangeVal
   }
 
-  // check formatting of video length inputs
-  const checkTimeInputs = (m, s, ms) => {
+
+
+  // check formatting of video length inputs for strings
+  const formatTime = (m, s, ms, type) => {
     if(m.length < 1) {
       m = '00'
     }
@@ -84,8 +89,15 @@ $( () => {
     if(ms.length < 3) {
       ms = '0' + ms
     }
-    timeString = `${m}:${s}.${ms}` // set timeString variable
-    return timeString
+    if(type === 'string') {
+      timeString = `${m}:${s}.${ms}` // set timeString variable
+      return timeString
+    }
+    if (type === 'number') {
+      numString = parseInt(`${m}${s}${ms}`)
+      return numString
+    }
+
   }
 
   ////////////////////////////////////////
@@ -98,7 +110,7 @@ $( () => {
     let m = $('#vidMM')[0].value // variable holds minutes input
     let s = $('#vidSS')[0].value // variable holds seconds input
     let ms = $('#vidMS')[0].value // variable holds milliseconds input
-    vidTimeNumber = new Date(`2018-04-15T00:${checkTimeInputs(m, s, ms)}`) // set date value for timer manipulation
+    vidTimeNumber = new Date(`2018-04-15T00:${formatTime(m, s, ms, 'string')}`) // set date value for timer manipulation
     vidTimeNumber = parseInt(`${vidTimeNumber.getMinutes()}${vidTimeNumber.getSeconds()}${vidTimeNumber.getMilliseconds()}`)
     $('#range').attr('max', vidTimeNumber)
     $('#vidLength').text(vidTimeString)
@@ -114,8 +126,6 @@ $( () => {
         handleTimer = setInterval(timer, 1)
         $('#stopStart').text('||')
         play = true
-
-
       } else if(play === true) { // stop timer for video
         clearInterval(handleTimer)
         $('#stopStart').text('>')
