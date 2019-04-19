@@ -9,14 +9,19 @@ app.controller('MainController', function() {
   this.durationHH = '00'
   this.durationMM = '00'
   this.durationSS = '00'
+  this.durationMS = '000'
+
   this.startTime = '00'
-  this.startHH = '01'
-  this.startMM = '45'
-  this.startSS = '05'
+  // this.startHH = '00'
+  this.startMM = '00'
+  this.startSS = '00'
+  this.startMS = '000'
+
   this.endTime = '00'
-  this.endHH = '05'
-  this.endMM = '03'
-  this.endSS = '30'
+  // this.endHH = '00'
+  this.endMM = '00'
+  this.endSS = '00'
+  this.endMS = '000'
   this.vf = 0
 
   ////////////////////////////
@@ -25,23 +30,23 @@ app.controller('MainController', function() {
 
   // set video duration for timeline and other calculations
   this.submitDuration = () => {
-    this.duration = this.durationHH + ':' + this.durationMM + ':' + this.durationSS
+    this.duration = this.durationMM + ':' + this.durationSS + "." + this.duration.MS
     console.log(new Date('2018-04-15T' + this.duration + 'z'))
   }
 
   // set view fragment start and end times
   this.submitVF = () => {
-    console.log('submittingVF');
     this.startTime = this.startHH + ':' + this.startMM + ':' + this.startSS
     this.endTime = this.endHH + ':' + this.endMM + ':' + this.endSS
     let startTime = new Date('2018-04-15T' + this.startTime)
     let endTime = new Date('2018-04-15T' + this.endTime)
-    this.checkTimeDiff(endTime, startTime)
+    console.log(startTime.getMilliseconds())
+    console.log(endTime.getMilliseconds());
+    // let viewFragment = this.checkTimeDiff(endTime, startTime)
+    // console.log(viewFragment);
 
 
     // let viewFragment = (endTime.getHours() - startTime.getHours()) + ':' + (endTime.getMinutes() - startTime.getMinutes()) + ":" + (endTime.getSeconds() - startTime.getSeconds())
-
-
 
     // console.log(viewFragment)
     // console.log(viewFragment.getHours())
@@ -65,7 +70,7 @@ app.controller('MainController', function() {
       }
     }
 
-    console.log(hoursDiff + ":" + minutesDiff + ':' + secondsDiff);
+    return hoursDiff + ":" + minutesDiff + ':' + secondsDiff
   }
 
   // create fragment pair and push to array for timeline
