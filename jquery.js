@@ -13,8 +13,9 @@ $( () => {
   let s = 0 // seconds variable
   let ms = 0 // milliseconds variable
   let play = false // whether video is playing or not
-  let vf = [] // video fragments array
+  let vf = [] // view fragments array
   let vfIndex = 0 // vf current index place holder for adding stopTime key value to objects
+  let uvtArr = [] // unique view times array
 
   // set value of UVT element
   $('#uvt').append(uvt)
@@ -50,6 +51,37 @@ $( () => {
     $('#range')[0].value = currentLocation
     // set timeElapsed element; send time increments to formatTime for formatting
     $('#timeElapsed').text(formatTime(m.toString(), s.toString(), ms.toString(), 'string'))
+    // create endTime key value for real-time update
+    vf[vfIndex].endTime = currentLocation
+    // console.log(vf);
+    calcUVT(vf[vfIndex])
+
+  }
+
+  const calcUVT = (obj) => {
+    // console.log(obj);
+    if(uvtArr.length === 0) {
+      uvtArr.push(obj)
+    } else {
+      uvtArr.forEach((x) => {
+        if(obj.startTime === x.startTime) {
+          console.log('same startTime')
+        } else {
+          console.log('different startTime');
+          // check if start time is within all other pairs in array
+          // should only find one, so if this is true,
+          // compare end times
+          // if end time is greater than found match end time
+          // update that match's end time
+          // otherwise, move on. 
+        }
+      })
+    }
+
+    console.log(uvtArr);
+    // check every object in vf array against unique range list
+    // if unique, add to unique range list
+    // check for overlap, if over lap subtract overlap and return just the unique range
   }
 
   // updated timeElapsed element when slider is moved
