@@ -85,7 +85,7 @@ $( () => {
   }
 
   const checkOverlap = (obj) => {
-    console.log(obj.endTime);
+    // console.log(obj.endTime);
     for(let i = 0; i < uvtArr.length; i++) {
       if(obj.startTime === uvtArr[i].startTime) { // check if same start time
         // console.log('same start time');
@@ -102,33 +102,48 @@ $( () => {
             }
           }
           uvtArr[i].endTime = obj.endTime
+          // return true to prevent pushing of new object
           return true
         }
+        // return true to prevent pushing of new object
         return true
       } else if (obj.startTime > uvtArr[i].startTime && obj.startTime < uvtArr[i].endTime) { // check if start time is within range of existing UVT pair
         // console.log(obj.endTime);
         // console.log('start time within range: ' + i );
         if(obj.endTime > uvtArr[i].endTime) {
           // console.log('later end time of same start time');
-          // check if end time is in range of any following uvtArr elements
           // console.log(i);
+          // check if end time is in range of any following uvtArr elements
+          ///////// probably don't need to do a for loop here could just check next array element's start and end times.
           for(let x = (i+1); x < uvtArr.length; x++) {
             // console.log(uvtArr[x]);
             if(obj.endTime >= uvtArr[x].startTime && obj.endTime <= uvtArr[x].endTime) {
               // console.log('end time within existing range');
               // console.log(x);
+              // if current location is in next UVT element range, update previous element's end time
               uvtArr[i].endTime = uvtArr[x].endTime
+              // splice the array to remove the overlapping element
+
               uvtArr.splice((i+1), x)
+              // return true to prevent pushing of new object
               return true
             }
           }
           uvtArr[i].endTime = obj.endTime
+          // return true to prevent pushing of new object
           return true
         }
         return true
+      } else if(obj.startTime === uvtArr[i].endTime) { // check if start time matches an end time
+        // console.log('start time same as end time');
+        // if match found, set array element's end time to current location i.e. obj.endTime
+        uvtArr[i].endTime = obj.endTime
+        // return true to prevent pushing of new object
+        return true;
       }
 
     }
+    // return false to push new object
     return false
   }
 
@@ -179,8 +194,7 @@ $( () => {
       if(msSF.length < 3) {
         msSF = '0' + msSF
       }
-
-
+    // format return data based on type request from function call
     if(type === 'string') {
       timeString = `${mSF}:${sSF}.${msSF}` // set timeString variable
       return timeString // return a string object
