@@ -121,142 +121,17 @@ $( () => {
               uvtArr.splice((i+1), x)
               return true
             }
-            // if(uvtArr[x].endTime >= uvtArr[i].startTime && uvtArr[x].endTime < uvtArr[i].endTime) {
-            //   console.log('end time within existing range');
-            //   console.log(i);
-            //   // uvtArr[x].endTime = uvtArr[i].endTime
-            //   // uvtArr.splice((i+1), x)
-            // }
           }
           uvtArr[i].endTime = obj.endTime
           return true
         }
         return true
       }
-      // else if (obj.startTime > uvtArr[i].startTime && obj.startTime <= uvtArr[i].endTime) {
-      //   // console.log('start time within range');
-      //   if(obj.endTime > uvtArr[i].endTime) {
-      //     // console.log('later end time of same start time');
-      //     uvtArr[i].endTime = obj.endTime
-      //     return true
-      //   }
-      //   return true
-      // } else if( obj.endTime >= uvtArr[i].startTime && obj.endTime <= uvtArr[i].endTime) {
-      //   // console.log('end time within range');
-      //   uvtArr[i].startTime = obj.startTime
-      //   return true
-      // }
+
     }
     return false
   }
-  //
-  // const checkStartTime = (obj) => {
-  //   for(let i = 0; i < uvtArr.length; i++) {
-  //     if(obj.startTime >= uvtArr[i].startTime && obj.startTime <= uvtArr[i].endTime) { // if start time is within range
-  //       console.log('start time within range');
-  //       if(obj.endTime > uvtArr[i].endTime) {
-  //         console.log('later than end time of match');
-  //         uvtArr[i].endTime = obj.endTime
-  //         return true
-  //       }
-  //       return true
-  //     }
-  //   }
-  //   return false
-  // }
-  //
-  // const checkEndTime = (obj) => {
-  //   for(let i = 0; i < uvtArr.length; i++) {
-  //     if(obj.endTime >= uvtArr[i].startTime && obj.endTime <= uvtArr[i].endTime) { // if start time is within range
-  //       console.log('end time within range');
-  //       if(obj.startTime < uvtArr[i].startTime) {
-  //         console.log('earlier than end time of match');
-  //         uvtArr[i].endTime = obj.endTime
-  //         return true
-  //       }
-  //       return true
-  //     }
-  //   }
-  //   return false
-  // }
 
-    // console.log(obj);
-    // if(uvtArr.length === 0) {
-    //   uvtArr.push(obj)
-    // } else {
-    //   if(uvtArr.includes(obj) === false) {
-    //     console.log('check ranges');
-    //
-    //   }
-    //   // console.log(uvtArr.includes(obj));
-    //   // if (uvtArr.includes(obj) === false) {
-    //   //   console.log('check ranges');
-    //   //
-    //   //
-    //   // } else {
-    //   //   uvtArr.push(obj)
-    //   // }
-    //   // uvtArr.forEach((x) => {
-    //   //   if(obj.startTime === x.startTime && obj.endTime !== x.endTime) {
-    //   //     console.log('same start time');
-    //   //     console.log(x);
-    //   //     console.log(obj);
-    //   //   //   console.log('same startTime')
-    //   //   //   // check if end time is >= to found match's end time.
-    //   //   //   // if it is, update the end time,
-    //   //   //   // otherwise, move on.
-    //   //   } else if (obj.startTime > x.startTime && obj.startTime < x.endTime) {
-    //   //     console.log('start time in range, checking end time');
-    //   //     console.log(x);
-    //   //     console.log(obj);
-    //   //   //   console.log('different startTime');
-    //   //   //   // check if start time is within any other pairs in array
-    //   //   //   // should only find one, so if this is true,
-    //   //   //   // compare end times
-    //   //   //   // if end time is greater than found match end time
-    //   //   //   // update that match's end time
-    //   //   //   // otherwise, move on.
-    //   // } else {
-    //   //   uvtArr.push(obj)
-    //   // }
-    //   // })
-    // else {
-    //   uvtArr.push(obj)
-    // }
-    //
-    // console.log(uvtArr);
-    // // check every object in vf array against unique range list
-    // // if unique, add to unique range list
-    // // check for overlap, if over lap subtract overlap and return just the unique range
-  // }
-
-  // checkUnique = (obj) => {
-  //   uvtArr.forEach((x) => {
-  //     if(obj.startTime === x.startTime && obj.endTime !== x.endTime) {
-  //       console.log('same start time');
-  //       console.log(x);
-  //       console.log(obj);
-  //       return false
-  //     //   console.log('same startTime')
-  //     //   // check if end time is >= to found match's end time.
-  //     //   // if it is, update the end time,
-  //     //   // otherwise, move on.
-  //     } else if (obj.startTime > x.startTime && obj.startTime < x.endTime) {
-  //       console.log('start time in range, checking end time');
-  //       console.log(x);
-  //       console.log(obj);
-  //       return false
-  //     //   console.log('different startTime');
-  //     //   // check if start time is within any other pairs in array
-  //     //   // should only find one, so if this is true,
-  //     //   // compare end times
-  //     //   // if end time is greater than found match end time
-  //     //   // update that match's end time
-  //     //   // otherwise, move on.
-  //   }
-  //   })
-  //   return true
-  // }
 
   // updated timeElapsed element when slider is moved
   updateTimerVal = (val) => {
