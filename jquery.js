@@ -66,18 +66,50 @@ $( () => {
   const updateTimeLine = () => {
     // loop through uvtArr
     for(let i = 0; i < uvtArr.length; i++) {
-      let existingChartUVTS = $('#timeline').children()
-      let uvtDivCheckID = 'uvt' + i
-      for(let x = 0; x < existingChartUVTS.length; x++) {
-        // console.log(existingChartUVTS[i].id);
-        if(existingChartUVTS[i].id === uvtDivCheckID) {
-          // console.log(existingChartUVTS[i].id)
-          let uvtWidth = Math.round(((uvtArr[i].endTime - uvtArr[i].startTime)/vidTimeNumber)*100) + '%'
-          console.log(uvtWidth);
-          $(`#${uvtDivCheckID}`).width(uvtWidth)
-          console.log($(`#${uvtDivCheckID}`));
-        }
+      let existingChartUVTSArr = $('#timeline').children()
+      console.log(existingChartUVTSArr);
+      let existingChartIDsArr = []
+      for(let x = 0; x < existingChartUVTSArr.length; x++) {
+        existingChartIDsArr.push(existingChartUVTSArr[x].id)
       }
+      // console.log(existingChartIDsArr);
+
+      let uvtDivCheckID = 'uvt' + i
+
+      if(existingChartIDsArr.includes(uvtDivCheckID)) {
+        console.log('div exists: ' + uvtDivCheckID);
+        let uvtWidth = Math.round(((uvtArr[i].endTime - uvtArr[i].startTime)/vidTimeNumber)*100) + '%'
+        // console.log(uvtWidth);
+        $(`#${uvtDivCheckID}`).width(uvtWidth)
+      } else {
+        let newUvtDivId = 'uvt' + i
+        uvtWidth = Math.round(((uvtArr[i].endTime - uvtArr[i].startTime)/vidTimeNumber)*100) + '%'
+        let uvtDiv = $('<div>').addClass('uvtDiv').attr('id', newUvtDivId).width(uvtWidth)
+
+        $('#timeline').append(uvtDiv)
+        // console.log('uvt width: ' + uvtWidth.toFixed(2));
+        // if(i === uvtArr.length - 1) {
+        //   if(uvtArr[i].endTime !== vidTimeNumber) {
+        //     let noViewDiv = $('<div>').addClass('noViewDiv')
+        //     noViewWidth = (vidTimeNumber - uvtArr[i].endTime)/vidTimeNumber
+        //
+        //   }
+        // }
+      }
+
+
+
+      //
+      // for(let x = 0; x < existingChartUVTS.length; x++) {
+      //   // console.log(existingChartUVTS[i].id);
+      //   if(existingChartUVTS[i].id === uvtDivCheckID) {
+      //     // console.log(existingChartUVTS[i].id)
+      //     let uvtWidth = Math.round(((uvtArr[i].endTime - uvtArr[i].startTime)/vidTimeNumber)*100) + '%'
+      //     console.log(uvtWidth);
+      //     $(`#${uvtDivCheckID}`).width(uvtWidth)
+      //     console.log($(`#${uvtDivCheckID}`));
+      //   }
+      // }
       // let uvtDiv = $('<div>').addClass('uvtDiv')
       // uvtWidth = ((uvtArr[i].endTime - uvtArr[i].startTime)/vidTimeNumber)*100
       // $('#timeline').append(uvtDiv).attr('width', uvtWidth)
