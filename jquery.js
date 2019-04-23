@@ -69,11 +69,11 @@ $( () => {
 
       let uvtDivCheckID = 'uvt' + i
       let noUVTDivCheckId = 'nUVT' + i
-
+      let startsAtBeginning = 0 // variable to add to i later if noUVTDivCheckID needs to be incremented
 
 
       let existingChartUVTSArr = $('#timeline').children()
-      console.log(existingChartUVTSArr);
+      // console.log(existingChartUVTSArr);
       let existingChartIDsArr = []
       for(let x = 0; x < existingChartUVTSArr.length; x++) {
         existingChartIDsArr.push(existingChartUVTSArr[x].id)
@@ -82,10 +82,11 @@ $( () => {
 
 
       if(i === 0 && uvtArr[i].startTime !== 0 && !existingChartIDsArr.includes(noUVTDivCheckId)) {
-        console.log('first uvt in arr doesn\'t start at beginning ');
+        // console.log('first uvt in arr doesn\'t start at beginning ');
         let nUVTWidth = Math.round((uvtArr[i].startTime/vidTimeNumber)*100) + '%'
         let noViewDiv = $('<div>').addClass('noViewDiv').attr('id', noUVTDivCheckId).width(nUVTWidth)
         $('#timeline').prepend(noViewDiv)
+        startsAtBeginning = 1
       }
 
       if(existingChartIDsArr.includes(uvtDivCheckID)) {
@@ -94,31 +95,63 @@ $( () => {
         // console.log(uvtWidth);
         $(`#${uvtDivCheckID}`).width(uvtWidth)
       } else if(existingChartIDsArr.includes(noUVTDivCheckId)) {
-        // if(i < uvtArr.length - 1) {
           let noUVTWidth = Math.round(((uvtArr[i+1].startTime - uvtArr[i].endTime)/vidTimeNumber)*100) + '%'
           $(`#${noUVTDivCheckId}`).width(noUVTWidth)
-        // } else {
-        //   if(uvtArr[i].endTime !== vidTimeNumber) {
-        //     let noUVTWidth = Math.round(((vidTimeNumber - uvtArr[i].endTime)/vidTimeNumber)*100) + '%'
-        //     $(`#${noUVTDivCheckId}`).width()
-        //   }
-        // }
-      } else {
+      } else { // create new divs
         let newUvtDivId = 'uvt' + i
-        uvtWidth = Math.round(((uvtArr[i].endTime - uvtArr[i].startTime)/vidTimeNumber)*100) + '%'
-        let uvtDiv = $('<div>').addClass('uvtDiv').attr('id', newUvtDivId).width(uvtWidth)
+        let newNoUVTDivID = 'nUVT' + (i + startsAtBeginning)
 
+        let uvtWidth = Math.round(((uvtArr[i].endTime - uvtArr[i].startTime)/vidTimeNumber)*100) + '%'
+        let nUVTWidth = 0
+        if(i !== uvtArr.length - 1) { // if not at the end of the array
+          nUVTWidth = Math.round(((uvtArr[i+1].startTime - uvtArr[i].endTime)/vidTimeNumber)*100) + '%'
+        } else {
+          if(uvtArr[i].endTime !== vidTimeNumber) { // if it is the last one check if the end time is not the end of the video
+            nUVTWidth = Math.round(((vidTimeNumber - uvtArr[i].endTime)/vidTimeNumber)*100) + '%'
+          }
+        }
+
+        let uvtDiv = $('<div>').addClass('uvtDiv').attr('id', newUvtDivId).width(uvtWidth)
+        let nUVTDiv = $('<div>').addClass('noViewDiv').attr('id', newNoUVTDivID).width(nUVTWidth)
         $('#timeline').append(uvtDiv)
+        $('#timeline').append(nUVTDiv)
+
+
+        //
+        // if(i !== uvtArr.length - 1 && uvtArr[i].endTime !== vidTimeNumber) { // if not at the end of the array and
+        //   let uvtWidth = Math.round(((uvtArr[i].endTime - uvtArr[i].startTime)/vidTimeNumber)*100) + '%'
+        //   let uvtDiv = $('<div>').addClass('uvtDiv').attr('id', newUvtDivId).width(uvtWidth)
+        //   $('#timeline').append(uvtDiv)
+        //
+        //
+        //   let nUVTWidth = Math.round(((uvtArr[i+1].startTime - uvtArr[i].endTime)/vidTimeNumber)*100) + '%'
+        //   let nUVTDiv = $('<div>').addClass('noViewDiv').attr('id', newNoUVTDivID).width(nUVTWidth)
+        //   $('#timeline').append(nUVTDiv)
+        // } else {
+        //   let uvtWidth = Math.round(((uvtArr[i].endTime - uvtArr[i].startTime)/vidTimeNumber)*100) + '%'
+        //   let uvtDiv = $('<div>').addClass('uvtDiv').attr('id', newUvtDivId).width(uvtWidth)
+        //   $('#timeline').append(uvtDiv)
+        // }
+
+        // uvtWidth = Math.round(((uvtArr[i].endTime - uvtArr[i].startTime)/vidTimeNumber)*100) + '%'
+        // let uvtDiv = $('<div>').addClass('uvtDiv').attr('id', newUvtDivId).width(uvtWidth)
+
+
+
+
 
         // if(i < uvtArr.length - 1) {
-          let noUVTWidth = Math.round(((uvtArr[i+1].startTime - uvtArr[i].endTime)/vidTimeNumber)*100) + '%'
-          $(`#${noUVTDivCheckId}`).width(noUVTWidth)
+        //   let uvtWidth = Math.round(((uvtArr[i].endTime - uvtArr[i].startTime)/vidTimeNumber)*100) + '%'
+        //   let uvtDiv = $('<div>').addClass('uvtDiv').attr('id', newUvtDivId).width(uvtWidth)
+        //   let noUVTWidth = Math.round(((uvtArr[i+1].startTime - uvtArr[i].endTime)/vidTimeNumber)*100) + '%'
+        //   $(`#${noUVTDivCheckId}`).width(noUVTWidth)
         // } else {
         //   if(uvtArr[i].endTime !== vidTimeNumber) {
         //     let noUVTWidth = Math.round(((vidTimeNumber - uvtArr[i].endTime)/vidTimeNumber)*100) + '%'
         //     $(`#${noUVTDivCheckId}`).width()
         //   }
         // }
+
 
         // console.log('uvt width: ' + uvtWidth.toFixed(2));
         // if(i === uvtArr.length - 1) {
