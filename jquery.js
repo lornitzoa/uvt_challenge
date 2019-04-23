@@ -57,15 +57,15 @@ $( () => {
     // create endTime key value for real-time update
     vf[vfIndex].endTime = currentLocation
     // console.log(vf[vfIndex].endTime);
-    calcUVT(vf[vfIndex])
-    // checkEndTimeOverlap(vf[vfIndex])
+    updateUVT(vf[vfIndex])
+
     // console.log(vf[vfIndex].endTime);
 
   }
 
 
 
-  const calcUVT = (obj) => {
+  const updateUVT = (obj) => {
     if(uvtArr.length === 0) {
       uvtArr.push(obj)
     } else {
@@ -74,16 +74,7 @@ $( () => {
             uvtArr.push(obj)
         }
       } else if(uvtArr.includes(obj) === true) {
-        for(let i = 0; i < uvtArr.length; i++) {
-          if(currentLocation > uvtArr[i].startTime && currentLocation < uvtArr[i].endTime) {
-            console.log('currentLocation within existing range');
-            uvtArr[i].startTime = obj.startTime
-            uvtArr.pop()
-            console.log(uvtArr[i]);
-            return
-
-          }
-        }
+        checkEndTimeOverlap(obj)
       }
     }
     // console.log(uvtArr);
@@ -151,29 +142,27 @@ $( () => {
     return false
   }
 
+  // checks if current time is with range of existing uvt elements
   const checkEndTimeOverlap = (obj) => {
+    // loop through uvt array
     for(let i = 0; i < uvtArr.length; i++) {
-      if(obj.endTime > uvtArr[i].startTime && obj.endTime < uvtArr[i].endTime) {
-        console.log('end time within range');
-        return true
-      }
-    }
-    console.log('end time not within existing range');
-    return false
+      // if current time is within range of given pair
+      if(currentLocation > uvtArr[i].startTime && currentLocation < uvtArr[i].endTime) {
+        // console.log('currentLocation within existing range');
+        // set matched element's start time to current view fragments start time;
+        uvtArr[i].startTime = obj.startTime
+        // remove the last/current uvt element to prevent 'true' finding of next check of current view fragment existing in uvtArr (updateUVT)
+        uvtArr.pop()
+        // console.log(uvtArr[i]);
+        return
 
-  }
-
-  const getIndex = (obj) => {
-    for(let x = 0; x < uvtArr.length; x++) {
-      if(uvtArr[x].startTime === obj.startTime) {
-        return x
       }
     }
   }
-
 
   // updated timeElapsed element when slider is moved
-  updateTimerVal = (val) => {
+  const updateTimerVal = (val) => {
+    // convert text from video length inputs to numbers
     m = parseInt(val.slice(-7, -5)) || 0 // slice minutes from value
     s = parseInt(val.slice(-5, -3)) || 0 // slice seconds from value
     ms = parseInt(val.slice(-3)) // slice milliseconds from value
@@ -238,11 +227,9 @@ $( () => {
   $('form').on('submit', (e) => {
     // prevent default form submission action
     e.preventDefault()
-
     let m = parseInt($('#vidMM')[0].value) || 0 // variable holds minutes input
     let s = parseInt($('#vidSS')[0].value) || 0 // variable holds seconds input
     let ms = parseInt($('#vidMS')[0].value) || 0 // variable holds milliseconds input
-
     // set video length as number and set max value for range element
     vidTimeNumber = formatTime(m, s, ms, 'number')
     console.log(vidTimeNumber);
@@ -259,7 +246,7 @@ $( () => {
       if(play === false) { // functionality to start timer
         // use currentLocation variable to add startTime to vfObj
         vfObj.startTime = currentLocation
-        console.log('start time: ' +  currentLocation);
+        // console.log('start time: ' +  currentLocation);
         // push vfObj to vf array
         vf.push(vfObj)
         // start timer
@@ -270,7 +257,7 @@ $( () => {
         play = true
         // console.log(vf)
       } else if(play === true) { // functionality to stop timer
-        console.log('end time: ' +  currentLocation);
+        // console.log('end time: ' +  currentLocation);
         // stop timer interval
         clearInterval(handleTimer)
         // change text on stopStart button

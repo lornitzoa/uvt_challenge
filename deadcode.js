@@ -192,3 +192,14 @@
   <input type="text" name="end-ms" ng-model='ctrl.endMS' min=0 max='999'>
   <input type="submit" name="submit" value="Submit">
 </form>
+
+
+
+
+0: {startTime: 5112, endTime: 9420}
+1: {startTime: 48753, endTime: 50728}
+2: {startTime: 46818, endTime: 48756}
+
+
+endTime: 48756
+startTime: 46818
