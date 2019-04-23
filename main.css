@@ -1,5 +1,13 @@
+body {
+  text-align: center;
+}
+
+.sliderWrapper {
+  display: none;
+}
+
 #range {
-  /* -webkit-appearance: none; */
+  height: 5px;
   margin: 18px 0;
   width: 80%;
 }
@@ -12,10 +20,11 @@
 #timeline {
   display: flex;
   justify-content: flex-start;
+  margin: 0 auto;
   width: 80%;
   height: 15px;
-  border: solid gold 2px;
-  margin: 5px 0 ;
+  border: solid grey 2px;
+  border-radius: 5px;
 }
 
 

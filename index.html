@@ -20,7 +20,7 @@
   </head>
   <body ng-controller='MainController as ctrl'>
     <h1>Unique View Time</h1>
-    <form id='vidLength'>
+    <form >
       <h2>Load Video</h2>
       <input type="text"  id='vidMM' min='0' max='59' placeholder="minutes">
       <input type="text"  id='vidSS' min='0' max='59' placeholder="seconds">
@@ -30,12 +30,11 @@
 
     <div class="sliderWrapper">
       <input type="range" min='0' max='' value='0' id='range' onchange="updateTimerVal(this.value)">
+      <div id='timeline'></div>
       <p id='timeElapsed'></p>
       <p id='vidLength'></p>
 
-      <div id='timeline'>
 
-      </div>
 
 
       <button type="button" id="stopStart">></button>
