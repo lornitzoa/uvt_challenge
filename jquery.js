@@ -66,6 +66,12 @@ $( () => {
   const updateTimeLine = () => {
     // loop through uvtArr
     for(let i = 0; i < uvtArr.length; i++) {
+
+      let uvtDivCheckID = 'uvt' + i
+      let noUVTDivCheckId = 'nUVT' + i
+
+
+
       let existingChartUVTSArr = $('#timeline').children()
       console.log(existingChartUVTSArr);
       let existingChartIDsArr = []
@@ -74,19 +80,46 @@ $( () => {
       }
       // console.log(existingChartIDsArr);
 
-      let uvtDivCheckID = 'uvt' + i
+
+      if(i === 0 && uvtArr[i].startTime !== 0 && !existingChartIDsArr.includes(noUVTDivCheckId)) {
+        console.log('first uvt in arr doesn\'t start at beginning ');
+        let nUVTWidth = Math.round((uvtArr[i].startTime/vidTimeNumber)*100) + '%'
+        let noViewDiv = $('<div>').addClass('noViewDiv').attr('id', noUVTDivCheckId).width(nUVTWidth)
+        $('#timeline').prepend(noViewDiv)
+      }
 
       if(existingChartIDsArr.includes(uvtDivCheckID)) {
-        console.log('div exists: ' + uvtDivCheckID);
+        // console.log('div exists: ' + uvtDivCheckID);
         let uvtWidth = Math.round(((uvtArr[i].endTime - uvtArr[i].startTime)/vidTimeNumber)*100) + '%'
         // console.log(uvtWidth);
         $(`#${uvtDivCheckID}`).width(uvtWidth)
+      } else if(existingChartIDsArr.includes(noUVTDivCheckId)) {
+        // if(i < uvtArr.length - 1) {
+          let noUVTWidth = Math.round(((uvtArr[i+1].startTime - uvtArr[i].endTime)/vidTimeNumber)*100) + '%'
+          $(`#${noUVTDivCheckId}`).width(noUVTWidth)
+        // } else {
+        //   if(uvtArr[i].endTime !== vidTimeNumber) {
+        //     let noUVTWidth = Math.round(((vidTimeNumber - uvtArr[i].endTime)/vidTimeNumber)*100) + '%'
+        //     $(`#${noUVTDivCheckId}`).width()
+        //   }
+        // }
       } else {
         let newUvtDivId = 'uvt' + i
         uvtWidth = Math.round(((uvtArr[i].endTime - uvtArr[i].startTime)/vidTimeNumber)*100) + '%'
         let uvtDiv = $('<div>').addClass('uvtDiv').attr('id', newUvtDivId).width(uvtWidth)
 
         $('#timeline').append(uvtDiv)
+
+        // if(i < uvtArr.length - 1) {
+          let noUVTWidth = Math.round(((uvtArr[i+1].startTime - uvtArr[i].endTime)/vidTimeNumber)*100) + '%'
+          $(`#${noUVTDivCheckId}`).width(noUVTWidth)
+        // } else {
+        //   if(uvtArr[i].endTime !== vidTimeNumber) {
+        //     let noUVTWidth = Math.round(((vidTimeNumber - uvtArr[i].endTime)/vidTimeNumber)*100) + '%'
+        //     $(`#${noUVTDivCheckId}`).width()
+        //   }
+        // }
+
         // console.log('uvt width: ' + uvtWidth.toFixed(2));
         // if(i === uvtArr.length - 1) {
         //   if(uvtArr[i].endTime !== vidTimeNumber) {
