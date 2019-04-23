@@ -30,7 +30,7 @@ $( () => {
   const timer = () => {
     // console.log(currentLocation);
     // increment milliseconds up to 999
-
+    // console.log(uvtArr);
     if (ms < 995) {
       ms += 4 // millisecond incrementation per interval >> after testing, 4 seemed to be the best increment for having the timer close to actual duration of one second.
     } else {
@@ -48,6 +48,7 @@ $( () => {
     }
     // set current location to prepare for stopTime logging
     currentLocation = (formatTime(m, s, ms, 'number'))
+    // console.log(uvtArr);
     // console.log(currentLocation);
     // user current location to set range value/position
     $('#range')[0].value = currentLocation
@@ -57,42 +58,46 @@ $( () => {
     vf[vfIndex].endTime = currentLocation
     // console.log(vf[vfIndex].endTime);
     calcUVT(vf[vfIndex])
+    // checkEndTimeOverlap(vf[vfIndex])
+    // console.log(vf[vfIndex].endTime);
 
   }
 
-  const checkForString = () => {
-    let unitArr = [m, s, ms]
-    for (let i = 0; i < unitArr.length; i++) {
-      if(i.length < 0) {
-        i = 0
-      } else {
-        i = parseInt(i)
-      }
-    }
-  }
+
 
   const calcUVT = (obj) => {
     if(uvtArr.length === 0) {
       uvtArr.push(obj)
     } else {
       if(uvtArr.includes(obj) === false) {
-        if(checkOverlap(obj) === false) {
-          uvtArr.push(obj)
+        if(checkStartTimeOverlap(obj) === false) {
+            uvtArr.push(obj)
+        }
+      } else if(uvtArr.includes(obj) === true) {
+        for(let i = 0; i < uvtArr.length; i++) {
+          if(currentLocation > uvtArr[i].startTime && currentLocation < uvtArr[i].endTime) {
+            console.log('currentLocation within existing range');
+            uvtArr[i].startTime = obj.startTime
+            uvtArr.pop()
+            console.log(uvtArr[i]);
+            return
+
+          }
         }
       }
     }
     // console.log(uvtArr);
   }
 
-  const checkOverlap = (obj) => {
+  const checkStartTimeOverlap = (obj) => {
     // console.log(obj.endTime);
     for(let i = 0; i < uvtArr.length; i++) {
       if(obj.startTime === uvtArr[i].startTime) { // check if same start time
-        // console.log('same start time');
+        console.log('same start time');
         if(obj.endTime > uvtArr[i].endTime) {
           // console.log('later end time of same start time');
-          // check if end time is in range of any following uvtArr elements
           // console.log(i);
+          // check if end time is in range of any following uvtArr elements
           for(let x = (i+1); x < uvtArr.length; x++) {
             if(uvtArr[i].endTime >= uvtArr[x].startTime && uvtArr[i].endTime < uvtArr[x].endTime) {
               // console.log('within existing range');
@@ -123,7 +128,6 @@ $( () => {
               // if current location is in next UVT element range, update previous element's end time
               uvtArr[i].endTime = uvtArr[x].endTime
               // splice the array to remove the overlapping element
-
               uvtArr.splice((i+1), x)
               // return true to prevent pushing of new object
               return true
@@ -135,16 +139,36 @@ $( () => {
         }
         return true
       } else if(obj.startTime === uvtArr[i].endTime) { // check if start time matches an end time
-        // console.log('start time same as end time');
+        console.log('start time same as end time');
         // if match found, set array element's end time to current location i.e. obj.endTime
         uvtArr[i].endTime = obj.endTime
         // return true to prevent pushing of new object
         return true;
       }
-
     }
+    // console.log(obj.endTime);
     // return false to push new object
     return false
+  }
+
+  const checkEndTimeOverlap = (obj) => {
+    for(let i = 0; i < uvtArr.length; i++) {
+      if(obj.endTime > uvtArr[i].startTime && obj.endTime < uvtArr[i].endTime) {
+        console.log('end time within range');
+        return true
+      }
+    }
+    console.log('end time not within existing range');
+    return false
+
+  }
+
+  const getIndex = (obj) => {
+    for(let x = 0; x < uvtArr.length; x++) {
+      if(uvtArr[x].startTime === obj.startTime) {
+        return x
+      }
+    }
   }
 
 
@@ -235,6 +259,7 @@ $( () => {
       if(play === false) { // functionality to start timer
         // use currentLocation variable to add startTime to vfObj
         vfObj.startTime = currentLocation
+        console.log('start time: ' +  currentLocation);
         // push vfObj to vf array
         vf.push(vfObj)
         // start timer
@@ -245,7 +270,7 @@ $( () => {
         play = true
         // console.log(vf)
       } else if(play === true) { // functionality to stop timer
-        console.log(currentLocation);
+        console.log('end time: ' +  currentLocation);
         // stop timer interval
         clearInterval(handleTimer)
         // change text on stopStart button
@@ -253,7 +278,7 @@ $( () => {
         // set play to false for toggling of button functionality
         play = false
         // find object at current vf index and set endTime key value
-        // vf[vfIndex].endTime = currentLocation
+        vf[vfIndex].endTime = currentLocation
         // increment vfIndex for next pair
         vfIndex ++
         // console.log(vf)

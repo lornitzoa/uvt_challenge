@@ -133,6 +133,21 @@
 
 
 
+
+// const checkForString = () => {
+//   let unitArr = [m, s, ms]
+//   for (let i = 0; i < unitArr.length; i++) {
+//     if(i.length < 0) {
+//       i = 0
+//     } else {
+//       i = parseInt(i)
+//     }
+//   }
+// }
+
+
+
+
 /////////////////////////////////
 // original form template
 /////////////////////////////////
