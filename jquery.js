@@ -59,7 +59,39 @@ $( () => {
     // console.log(vf[vfIndex].endTime);
     updateUVT(vf[vfIndex])
     $('#uvt').text(calcUVT())
+    updateTimeLine()
     // console.log(vf[vfIndex].endTime);
+  }
+
+  const updateTimeLine = () => {
+    // loop through uvtArr
+    for(let i = 0; i < uvtArr.length; i++) {
+      let existingChartUVTS = $('#timeline').children()
+      let uvtDivCheckID = 'uvt' + i
+      for(let x = 0; x < existingChartUVTS.length; x++) {
+        // console.log(existingChartUVTS[i].id);
+        if(existingChartUVTS[i].id === uvtDivCheckID) {
+          // console.log(existingChartUVTS[i].id)
+          let uvtWidth = Math.round(((uvtArr[i].endTime - uvtArr[i].startTime)/vidTimeNumber)*100) + '%'
+          console.log(uvtWidth);
+          $(`#${uvtDivCheckID}`).width(uvtWidth)
+          console.log($(`#${uvtDivCheckID}`));
+        }
+      }
+      // let uvtDiv = $('<div>').addClass('uvtDiv')
+      // uvtWidth = ((uvtArr[i].endTime - uvtArr[i].startTime)/vidTimeNumber)*100
+      // $('#timeline').append(uvtDiv).attr('width', uvtWidth)
+      // // console.log('uvt width: ' + uvtWidth.toFixed(2));
+      // if(i === uvtArr.length - 1) {
+      //   if(uvtArr[i].endTime !== vidTimeNumber) {
+      //     let noViewDiv = $('<div>').addClass('noViewDiv')
+      //     noViewWidth = (vidTimeNumber - uvtArr[i].endTime)/vidTimeNumber
+      //
+      //   }
+      // }
+    }
+    // for each element, append an html element with width set to percentage of element's time span compared to full video length to the timeline, for each space between each element create an empty div with corresponding percentage of full video length
+    // append all elements to the time line
   }
 
   const updateUVT = (obj) => {

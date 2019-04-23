@@ -10,8 +10,16 @@
 }
 
 #timeline {
+  display: flex;
   width: 80%;
   height: 15px;
   border: solid gold 2px;
   margin: 5px 0 ;
+}
+
+
+.uvtDiv {
+  height: 15px;
+  width: 10%;
+  background-color: blue;
 }
