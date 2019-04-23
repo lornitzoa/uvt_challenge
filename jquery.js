@@ -3,7 +3,7 @@ $( () => {
   //     Variables
   ////////////////////////////////////////
 
-  let uvt = 0 // unique view time
+  let uvt = '00:00.000' // unique view time
   let vidTimeString = '0' // video length in string format
   let vidTimeNumber = 0 // video length in number format
   let handleTimer = 0 // timer placeholder
@@ -18,7 +18,7 @@ $( () => {
   let uvtArr = [] // unique view times array
 
   // set value of UVT element
-  $('#uvt').append(uvt)
+  $('#uvt').text(uvt)
 
 
 
@@ -58,12 +58,9 @@ $( () => {
     vf[vfIndex].endTime = currentLocation
     // console.log(vf[vfIndex].endTime);
     updateUVT(vf[vfIndex])
-
+    $('#uvt').text(calcUVT())
     // console.log(vf[vfIndex].endTime);
-
   }
-
-
 
   const updateUVT = (obj) => {
     if(uvtArr.length === 0) {
@@ -160,8 +157,41 @@ $( () => {
     }
   }
 
-  // updated timeElapsed element when slider is moved
-  const updateTimerVal = (val) => {
+  // calculates the unique view time (uvt)
+  const calcUVT = () => {
+    let uvtL = 0 // local uvt variable to update global uvt variable after calculation
+    for(let i = 0; i < uvtArr.length; i++) {
+      uvtL += (uvtArr[i].endTime - uvtArr[i].startTime)
+    }
+    return formatUVT(uvtL.toString())
+  }
+
+  const formatUVT = (uvt) => {
+    // console.log(uvt);
+    if(uvt.length <= 3) {
+      // local time unit variables
+      let mL = 0
+      let sL = 0
+      let msL = uvt
+      return formatTime(mL, sL, msL, 'string')
+    } else if(uvt.length <= 5) {
+      // local time unit variables
+      let mL = 0
+      let sL = parseInt(uvt.slice(-uvt.length, -3))
+      let msL = parseInt(uvt.slice(-3))
+      return formatTime(mL, sL, msL, 'string')
+    } else if (uvt.length <= 7) {
+      // local time unit variables
+      let mL = parseInt(uvt.slice(-uvt.length, -5))
+      let sL = parseInt(uvt.slice(-uvt.length, -3))
+      let msL = parseInt(uvt.slice(-3))
+      return formatTime(mL, sL, msL, 'string')
+    }
+
+  }
+
+  // updated timeElapsed element when slider is moved, called by range html element's onChange event
+  updateTimerVal = (val) => {
     // convert text from video length inputs to numbers
     m = parseInt(val.slice(-7, -5)) || 0 // slice minutes from value
     s = parseInt(val.slice(-5, -3)) || 0 // slice seconds from value
