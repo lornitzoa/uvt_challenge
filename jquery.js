@@ -213,26 +213,28 @@ $( () => {
       else if (obj.startTime > uvtArr[i].startTime && obj.startTime < uvtArr[i].endTime) { // check if start time is within range of existing UVT pair
         // console.log(obj.endTime);
         // console.log('start time within range: ' + i );
-        if(i < uvtArr.length - 1) {
-          if(obj.endTime >= uvtArr[i+1].startTime && obj.endTime <= uvtArr[i+1].endTime) {
-            // console.log('later end time of same start time');
-            // console.log(i);
-            // check if end time is in range of any following uvtArr elements
+        if(obj.endTime > uvtArr[i].endTime) {
+          if(i < uvtArr.length - 1) {
+            if(obj.endTime >= uvtArr[i+1].startTime && obj.endTime <= uvtArr[i+1].endTime) {
+              // console.log('later end time of same start time');
+              // console.log(i);
+              // check if end time is in range of any following uvtArr elements
 
-            if(obj.endTime > uvtArr[i+1].startTime) {
-              uvtArr[i].endTime = uvtArr[i+1].endTime
-              // console.log(uvtArr);
-              uvtArr.splice((i+1),1)
-              // console.log(uvtArr);
-              return true
+              if(obj.endTime > uvtArr[i+1].startTime) {
+                uvtArr[i].endTime = uvtArr[i+1].endTime
+                // console.log(uvtArr);
+                uvtArr.splice((i+1),1)
+                // console.log(uvtArr);
+                return true
+              }
             }
-          }
-          uvtArr[i].endTime = obj.endTime
-          // return true to prevent pushing of new object
-          return true
-        } else {
-          if(obj.endTime > uvtArr[i].endTime) {
             uvtArr[i].endTime = obj.endTime
+            // return true to prevent pushing of new object
+            return true
+          } else {
+            if(obj.endTime > uvtArr[i].endTime) {
+              uvtArr[i].endTime = obj.endTime
+            }
           }
         }
         return true

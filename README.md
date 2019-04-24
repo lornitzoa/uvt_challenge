@@ -1,6 +1,6 @@
 # UVT Challenge
 
-This is an application built in jQuery.
+This is an application built in jQuery to solve the Unique View Time fragments challenge.
 
 ## Running the Application
 
@@ -20,5 +20,6 @@ I was not sure how to write automated tests for some of the code I wrote and was
 
 ## Resources
 
-https://developer.mozilla.org/en-US/docs/Web/JavaScript
-https://www.w3schools.com/howto/howto_js_rangeslider.asp
+- https://developer.mozilla.org/en-US/docs/Web/JavaScript
+- https://www.w3schools.com/howto/howto_js_rangeslider.asp  
+- https://qunitjs.com/intro/
