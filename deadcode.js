@@ -1,3 +1,17 @@
+
+0: {startTime: 2933, endTime: 19292}
+1: {startTime: 15412, endTime: 19292}
+2: {startTime: 24737, endTime: 28469}
+
+obj = {startTime: 2933, endTime: 15413}
+
+
+0: {startTime: 2933, endTime: 19292}
+1: {startTime: 24737, endTime: 28469}
+
+
+
+
 /////////////////////////////////
 //  from checkOverlap
 ////////////////////////////////

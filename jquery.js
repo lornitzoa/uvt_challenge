@@ -1,4 +1,6 @@
 $( () => {
+
+
   ////////////////////////////////////////
   //     Variables
   ////////////////////////////////////////
@@ -16,9 +18,13 @@ $( () => {
   let vf = [] // view fragments array
   let vfIndex = 0 // vf current index place holder for adding stopTime key value to objects
   let uvtArr = [] // unique view times array
-
   // set value of UVT element
   $('#uvt').text(uvt)
+
+
+
+
+
 
   ////////////////////////////////////////
   //           Functions
@@ -33,17 +39,16 @@ $( () => {
     return totalMS
   }
 
+  // converts time units as string to a time string
   const convertStrUnitsToTimeStr = (m, s, ms) => {
+    // format strings to fit the 00:00.000 format
     let mL = checkStrLength(m, 2)
     let sL = checkStrLength(s, 2)
     let msL = checkStrLength(ms, 3)
     return `${mL}:${sL}.${msL}`
   }
 
-  const convertStringToMs = (timeStr) => {
-
-  }
-
+  // convert milliseconds to string
   const convertMsToString = (timeAsMS) => {
     mL = ''
     sL = ''
@@ -58,9 +63,9 @@ $( () => {
       msL = checkStrLength(timeAsMS.toString().slice(-3),3)
     }
     return `${mL}:${sL}.${msL}`
-
   }
 
+  // check string length for formatting
   const checkStrLength = (str, length) => {
     let unitStr = ''
     let placesNeeded = length - str.length
@@ -75,20 +80,26 @@ $( () => {
     return unitStr
   }
 
+
   /////////////////////////////////////////
   ////////// Timer functions //////////////
 
+  // start playing video
   const timer = () => {
-    currentLocation += 10 // millisecond incrementation per interval ** after testing, 4 seemed to be the best increment for having the timer close to actual duration of one second.
+    currentLocation += 4 // millisecond incrementation per interval
+    // ** after testing, 4 seemed to be the best increment for having the timer close to actual duration of one second.
 
     // user current location to set range value/position
     $('#range')[0].value = currentLocation
+    // console.log(currentLocation);
 
     // convert currentLocation to time string and set as text for timeElapsed display element
     $('#timeElapsed').text(convertMsToString(currentLocation))
+    // console.log(convertMsToString(currentLocation))
 
     // set vf[vfIndex].endTime to currentLocation
     vf[vfIndex].endTime = currentLocation
+    // console.log(vf)
 
     // check uvtArr against current view fragment and update uvtArr
     updateUVT(vf[vfIndex])
@@ -105,27 +116,34 @@ $( () => {
     }
   }
 
+  // stop playing video
   const stopTimer = () => {
     // stop timer interval
     clearInterval(handleTimer)
+
     // change text on stopStart button
     $('#stopStart').text('>')
+
     // set play to false for toggling of button functionality
     play = false
+
     // find object at current vf index and set endTime key value
     vf[vfIndex].endTime = currentLocation
+
     // increment vfIndex for next pair
-    vfIndex ++
-    // console.log(vf)
-    // console.log(uvtArr);
+    vfIndex++
   }
 
-  // updated timeElapsed element when slider is moved, called by range html element's onChange event
-   updateTimerVal = (val) => {
-     currentLocation = parseInt(val)
-     $('#timeElapsed').text(convertMsToString(currentLocation))
 
-   }
+  // updated timeElapsed element when slider is moved, called by range html element's onChange event
+  updateTimerVal = (val) => {
+    // set currentLocation to value of thumb on range
+    currentLocation = parseInt(val)
+
+    // convert currentLocation to time string and update the timeElapse display element
+    $('#timeElapsed').text(convertMsToString(currentLocation))
+  }
+
 
 
   /////////////////////////////////////////
@@ -133,51 +151,72 @@ $( () => {
 
   // calculates the unique view time (uvt)
   const calcUVT = () => {
-    let uvtL = 0 // local uvt variable to update global uvt variable after calculation
+    // local uvt variable to update global uvt variable after calculation
+    let uvtL = 0
+
+    // loop through uvtArr and calculate each element's time duration
     for(let i = 0; i < uvtArr.length; i++) {
+      // add element's duration to uvtL
       uvtL += (uvtArr[i].endTime - uvtArr[i].startTime)
     }
     // console.log(uvtL);
+
+    // return the result of converting the uvtL value to a time string
     return convertMsToString(uvtL)
   }
 
+
+  // update the UVT array
   const updateUVT = (obj) => {
     // if the array is empty push a new object
     if(uvtArr.length === 0) {
       uvtArr.push(obj)
+      // console.log(uvtArr)
     } else {
       // if the array has elements, check of the current vf object exists in the array
       if(uvtArr.includes(obj) === false) {
+        // console.log(uvtArr)
+        // console.log(obj)
+
         // if it doesn't check if the start time against existing uvt elements
         if(checkStartTimeOverlap(obj) === false) {
             // if it doesn't, push the object
             uvtArr.push(obj)
+            // console.log(uvtArr);
         }
-      } else if(uvtArr.includes(obj) === true) { // if the object does exist, i.e it is the current object with a running end time
+      } else if(uvtArr.includes(obj) === true) { // if the object does exist it will be the current view fragment object
         // check if the end time is running into an existing uvt element
         checkEndTimeOverlap(obj)
+        // console.log(uvtArr)
+        // console.log(obj)
       }
     }
-    console.log(uvtArr);
   }
 
+
+
+  // check if the start time of current view fragment is with range of any existing uvt element
   const checkStartTimeOverlap = (obj) => {
     // console.log(obj.endTime);
+    // loop through uvtArr
     for(let i = 0; i < uvtArr.length; i++) {
-      if(obj.startTime === uvtArr[i].startTime) { // check if same start time
-        console.log('same start time');
+      // check if same start time
+      if(obj.startTime === uvtArr[i].startTime) {
+        // console.log('same start time');
+        // if current running end time is greater than the current uvtArr[i] loop element...
         if(obj.endTime > uvtArr[i].endTime) {
           // console.log('later end time of same start time');
           // console.log(i);
-          // check if end time is in range of any following uvtArr elements
-          for(let x = (i+1); x < uvtArr.length; x++) {
-            if(uvtArr[i].endTime >= uvtArr[x].startTime && uvtArr[i].endTime < uvtArr[x].endTime) {
-              // console.log('within existing range');
-              // console.log(x);
-              uvtArr[i].endTime = uvtArr[x].endTime
-              uvtArr.splice((i+1), x)
+          if(i < uvtArr.length && uvtArr.length !== 1) {
+            if(obj.endTime > uvtArr[i+1].startTime) {
+              uvtArr[i].endTime = uvtArr[i+1].endTime
+              // console.log(uvtArr);
+              uvtArr.splice((i+1),1)
+              // console.log(uvtArr);
+              return true
             }
           }
+          // replace the earlier end time with the later end time
           uvtArr[i].endTime = obj.endTime
           // return true to prevent pushing of new object
           return true
@@ -187,24 +226,20 @@ $( () => {
       } else if (obj.startTime > uvtArr[i].startTime && obj.startTime < uvtArr[i].endTime) { // check if start time is within range of existing UVT pair
         // console.log(obj.endTime);
         // console.log('start time within range: ' + i );
-        if(obj.endTime > uvtArr[i].endTime) {
+        if(obj.endTime >= uvtArr[i+1].startTime && obj.endTime <= uvtArr[i+1].endTime) {
           // console.log('later end time of same start time');
           // console.log(i);
           // check if end time is in range of any following uvtArr elements
-          ///////// probably don't need to do a for loop here could just check next array element's start and end times.
-          for(let x = (i+1); x < uvtArr.length; x++) {
-            // console.log(uvtArr[x]);
-            if(obj.endTime >= uvtArr[x].startTime && obj.endTime <= uvtArr[x].endTime) {
-              // console.log('end time within existing range');
-              // console.log(x);
-              // if current location is in next UVT element range, update previous element's end time
-              uvtArr[i].endTime = uvtArr[x].endTime
-              // splice the array to remove the overlapping element
-              uvtArr.splice((i+1), x)
-              // return true to prevent pushing of new object
+          if(i < uvtArr.length && uvtArr.length !== 1) {
+            if(obj.endTime > uvtArr[i+1].startTime) {
+              uvtArr[i].endTime = uvtArr[i+1].endTime
+              // console.log(uvtArr);
+              uvtArr.splice((i+1),1)
+              // console.log(uvtArr);
               return true
             }
           }
+
           uvtArr[i].endTime = obj.endTime
           // return true to prevent pushing of new object
           return true
@@ -222,6 +257,40 @@ $( () => {
     // return false to push new object
     return false
   }
+
+  /////////////////////////////////////////
+  //////// Testing Variables ///////////
+
+  // testing uvtArr
+  // let uvtArr = [
+  //   {startTime: 2933, endTime: 19292},
+  //   {startTime: 15412, endTime: 19292},
+  //   {startTime: 24737, endTime: 28469}
+  // ]
+  //
+  // // obj with start and end time to test CheckStartTimeOVerlap
+  // let testObj = {startTime: 2933, endTime: 15413}
+  //
+  // let expectedUVTCheckStartOverlap = [
+  //   {startTime: 2933, endTime: 19292},
+  //   {startTime: 15412, endTime: 19292},
+  //   {startTime: 24737, endTime: 28469}
+  // ]
+  //
+  //
+  // // testing for checkStartTimeOverlap
+  // const itReturnsTrueIfStartTimeIsWithinExistingUVTAndModifiesUVTArr = (obj, expected) => {
+  //
+  // }
+  //
+  // let resultsCheckStartTimeOverLap = {
+  //   total: 0,
+  //   bad: 0
+  // }
+  //
+
+
+
 
   // checks if current time is with range of existing uvt elements
   const checkEndTimeOverlap = (obj) => {
@@ -296,9 +365,7 @@ $( () => {
         $('#timeline').append(uvtDiv)
         $('#timeline').append(nUVTDiv)
       }
-
     }
-
   }
 
 
@@ -321,6 +388,8 @@ $( () => {
     // convert string units to milliseconds for calculation purposes
     vidTimeNumber = convertUnitsToMs(parseInt(mEnd), parseInt(sEnd), parseInt(msEnd))
     $('#range').attr('max', vidTimeNumber)
+
+    $('form').css('display', 'none')
 
   })
 
@@ -346,6 +415,102 @@ $( () => {
       }
     }
   )
+
+
+  ////////////////////////////////////////
+  //              Testing
+  ////////////////////////////////////////
+
+  const checkTestResults = (result, expected, objToUpdate) => {
+    if(result !== expected) {
+      objToUpdate.bad++
+      console.log(`Expected ${expected}, but got ${result}`);
+    }
+  }
+
+  const logTestResults = (resultsObj) => {
+    console.log(`Of ${resultsObj.total} tests, ${resultsObj.bad} failed and ${resultsObj.total - resultsObj.bad} passed`);
+  }
+
+
+  // testing for convertUnitsToMs
+  const itConvertsUnitsToMs = (v1, v2, v3, expected) => {
+    resultsConvertsUnitsToMs.total++
+    let result = convertUnitsToMs(v1, v2, v3)
+    checkTestResults(result, expected, resultsConvertsUnitsToMs)
+  }
+
+  // results obj for itConvertsUnitsToMs
+  let resultsConvertsUnitsToMs = {
+    total: 0,
+    bad: 0
+  }
+
+  // test calls
+  itConvertsUnitsToMs(1,15,135, 75135)
+
+  // test response
+  logTestResults(resultsConvertsUnitsToMs)
+
+
+  // testing for convertStrUnitsToTimeStr
+  const itConvertsStrUnitsToTimeStr = (v1, v2, v3, expected) => {
+    resultsConvertStrUnitsToTimeStr.total++
+    let result = convertStrUnitsToTimeStr(v1, v2, v3)
+    checkTestResults(result, expected, resultsConvertStrUnitsToTimeStr)
+  }
+
+  // results obj for converts
+  let resultsConvertStrUnitsToTimeStr = {
+    total: 0,
+    bad: 0
+  }
+
+  // test calls
+  itConvertsStrUnitsToTimeStr('1', '15', '153', '01:15.153')
+
+  // test response
+  logTestResults(resultsConvertStrUnitsToTimeStr)
+
+
+  // testing for itConvertsMsToString
+  const itConvertsMsToString = (milliseconds, expected) => {
+    resultsConvertsMsToString.total++
+    let result = convertMsToString(milliseconds)
+    checkTestResults(result, expected, resultsConvertsMsToString)
+  }
+
+  // obj for itConvertsMsToString
+  let resultsConvertsMsToString = {
+    total: 0,
+    bad: 0,
+  }
+
+  // test calls
+  itConvertsMsToString(75135, '01:15.135')
+
+  // log test results
+  logTestResults(resultsConvertsMsToString)
+
+  // test for checkStrLength
+  const itChecksAndModifiesTimeUnitStrings = (string, length, expected) => {
+    resultsItChecksAndModifiesTimeUnitStrings.total++
+    let result = checkStrLength(string, length)
+    checkTestResults(result, expected, resultsItChecksAndModifiesTimeUnitStrings)
+  }
+
+  // obj for checkStrLength test
+  let resultsItChecksAndModifiesTimeUnitStrings = {
+    total: 0,
+    bad: 0
+  }
+
+  // testing calls
+  itChecksAndModifiesTimeUnitStrings('1', 2, '01')
+  itChecksAndModifiesTimeUnitStrings('', 3, '000')
+
+  // log results
+  logTestResults(resultsItChecksAndModifiesTimeUnitStrings)
 
 
 
