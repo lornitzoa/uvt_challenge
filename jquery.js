@@ -193,7 +193,7 @@ $( () => {
         if(obj.endTime > uvtArr[i].endTime) {
           // console.log('later end time of same start time');
           // console.log(i);
-          if(i < uvtArr.length && uvtArr.length !== 1) {
+          if(i < uvtArr.length - 1) {
             if(obj.endTime > uvtArr[i+1].startTime) {
               uvtArr[i].endTime = uvtArr[i+1].endTime
               // console.log(uvtArr);
@@ -336,17 +336,21 @@ $( () => {
   $('form').on('submit', (e) => {
     // prevent default form submission
     e.preventDefault()
-    let mEnd = $('#vidMM')[0].value  // variable holds video end time minutes
-    let sEnd = $('#vidSS')[0].value  // variable holds video end time seconds
-    let msEnd = $('#vidMS')[0].value  // variable holds video end time millisecond
+    let mEndStr = $('#vidMM')[0].value  // variable holds video end time minutes
+    let sEndStr = $('#vidSS')[0].value  // variable holds video end time seconds
+    let msEndStr = $('#vidMS')[0].value  // variable holds video end time millisecond
+
+    let mEndNo = parseInt(mEndStr) || 0
+    let sEndNo = parseInt(sEndStr) || 0
+    let msEndNo = parseInt(msEndStr) || 0
 
     // convert string units to time string format 00:00.000 for display purposes
-    vidTimeString = convertStrUnitsToTimeStr(mEnd, sEnd, msEnd)
+    vidTimeString = convertStrUnitsToTimeStr(mEndStr, sEndStr, msEndStr)
     $('#vidLength').text(vidTimeString)
     $('.sliderWrapper').css('display', 'block')
 
     // convert string units to milliseconds for calculation purposes
-    vidTimeNumber = convertUnitsToMs(parseInt(mEnd), parseInt(sEnd), parseInt(msEnd))
+    vidTimeNumber = convertUnitsToMs(mEndNo, sEndNo, msEndNo)
     $('#range').attr('max', vidTimeNumber)
 
     $('form').css('display', 'none')
@@ -376,21 +380,48 @@ $( () => {
     }
   )
 
+  $('#loadNew').on('click', () => {
+    $('form').css('display', 'block')
+    $('.sliderWrapper').css('display', 'none')
+    $('#timeElapsed').text('00:00.000')
+    $('#vidMM')[0].value = 'minutes'
+    $('#vidSS')[0].value = 'seconds'
+    $('#vidMS')[0].value = 'milliseconds'
+    $('#range')[0].value = 0
+    $('#timeline').empty()
+    uvt = '00:00.000' // unique view time
+    vidTimeString = '0' // video length in string format
+    vidTimeNumber = 0 // video length in number format
+    handleTimer = 0 // timer placeholder
+    currentLocation = 0 // current location value for range element
+    m = 0 // minutes variable
+    s = 0 // seconds variable
+    ms = 0 // milliseconds variable
+    play = false // whether video is playing or not
+    vf = [] // view fragments array
+    vfIndex = 0 // vf current index place holder for adding stopTime key value to objects
+    uvtArr = [] // unique view times array
+
+    // set value of UVT element
+    $('#uvt').text(uvt)
+
+  })
+
 
   ////////////////////////////////////////
   //              Testing
   ////////////////////////////////////////
 
-  const checkTestResults = (result, expected, objToUpdate) => {
-    if(result !== expected) {
-      objToUpdate.bad++
-      console.log(`Expected ${expected}, but got ${result}`);
-    }
-  }
-
-  const logTestResults = (resultsObj) => {
-    console.log(`Of ${resultsObj.total} tests, ${resultsObj.bad} failed and ${resultsObj.total - resultsObj.bad} passed`);
-  }
+  // const checkTestResults = (result, expected, objToUpdate) => {
+  //   if(result !== expected) {
+  //     objToUpdate.bad++
+  //     console.log(`Expected ${expected}, but got ${result}`);
+  //   }
+  // }
+  //
+  // const logTestResults = (resultsObj) => {
+  //   console.log(`Of ${resultsObj.total} tests, ${resultsObj.bad} failed and ${resultsObj.total - resultsObj.bad} passed`);
+  // }
 
   //
   // // testing for convertUnitsToMs

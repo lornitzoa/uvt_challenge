@@ -21,14 +21,15 @@
   <body ng-controller='MainController as ctrl'>
     <h1>Unique View Time Challenge</h1>
     <form >
-      <h2>Load Video</h2>
-      <input type="number"  id='vidMM' min='0' max='59' placeholder="minutes">
+      <h2>Load Video Time Units</h2>
+      <input type="number"  id='vidMM' min='0' max='99' placeholder="minutes">
       <input type="number"  id='vidSS' min='0' max='59' placeholder="seconds">
       <input type="number"  id='vidMS' min='0' max='999' placeholder="milliseconds">
       <input type="submit" name="" value="Submit">
     </form>
 
     <div class="sliderWrapper">
+      <button type="button" id="loadNew">Load New Video</button></br>
       <input type="range" min='0' max='' value='0' id='range' onchange="updateTimerVal(this.value)">
       <div id='timeline'></div>
       <div id="timeLabels">
@@ -36,6 +37,7 @@
         <p id='vidLength'></p>
       </div>
       <button type="button" id="stopStart">></button>
+
       <h2 >Unique View Time:</h2>
       <h2 id='uvt'></h2>
     </div>
