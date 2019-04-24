@@ -1,8 +1,10 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat');
 
 body {
+  margin-top: 100px;
   text-align: center;
   font-family: 'Montserrat';
+  background-color: rgba(8, 179, 76, 0.59)
 }
 
 .sliderWrapper {

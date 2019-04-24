@@ -22,10 +22,6 @@ $( () => {
   $('#uvt').text(uvt)
 
 
-
-
-
-
   ////////////////////////////////////////
   //           Functions
   ////////////////////////////////////////
@@ -50,9 +46,11 @@ $( () => {
 
   // convert milliseconds to string
   const convertMsToString = (timeAsMS) => {
+    // local time unit placeholders
     mL = ''
     sL = ''
     msL = ''
+    // checks for
     if(timeAsMS > 59000) {
       mL = checkStrLength((Math.floor(timeAsMS / 60000)).toString(),2)
       sL = checkStrLength(((timeAsMS - (mL * 60000)).toString().slice(-5,-3)),2) || '00'
@@ -88,28 +86,21 @@ $( () => {
   const timer = () => {
     currentLocation += 4 // millisecond incrementation per interval
     // ** after testing, 4 seemed to be the best increment for having the timer close to actual duration of one second.
-
     // user current location to set range value/position
     $('#range')[0].value = currentLocation
     // console.log(currentLocation);
-
     // convert currentLocation to time string and set as text for timeElapsed display element
     $('#timeElapsed').text(convertMsToString(currentLocation))
     // console.log(convertMsToString(currentLocation))
-
     // set vf[vfIndex].endTime to currentLocation
     vf[vfIndex].endTime = currentLocation
     // console.log(vf)
-
     // check uvtArr against current view fragment and update uvtArr
     updateUVT(vf[vfIndex])
-
     // calculate the UVT and set the uvt display text
     $('#uvt').text(calcUVT())
-
     // update the timeline
     updateTimeLine()
-
     // force stop at end of range
     if (currentLocation >= vidTimeNumber) {
       stopTimer()
@@ -120,16 +111,12 @@ $( () => {
   const stopTimer = () => {
     // stop timer interval
     clearInterval(handleTimer)
-
     // change text on stopStart button
     $('#stopStart').text('>')
-
     // set play to false for toggling of button functionality
     play = false
-
     // find object at current vf index and set endTime key value
     vf[vfIndex].endTime = currentLocation
-
     // increment vfIndex for next pair
     vfIndex++
   }
@@ -139,7 +126,6 @@ $( () => {
   updateTimerVal = (val) => {
     // set currentLocation to value of thumb on range
     currentLocation = parseInt(val)
-
     // convert currentLocation to time string and update the timeElapse display element
     $('#timeElapsed').text(convertMsToString(currentLocation))
   }
@@ -223,14 +209,16 @@ $( () => {
         }
         // return true to prevent pushing of new object
         return true
-      } else if (obj.startTime > uvtArr[i].startTime && obj.startTime < uvtArr[i].endTime) { // check if start time is within range of existing UVT pair
+      }
+      else if (obj.startTime > uvtArr[i].startTime && obj.startTime < uvtArr[i].endTime) { // check if start time is within range of existing UVT pair
         // console.log(obj.endTime);
         // console.log('start time within range: ' + i );
-        if(obj.endTime >= uvtArr[i+1].startTime && obj.endTime <= uvtArr[i+1].endTime) {
-          // console.log('later end time of same start time');
-          // console.log(i);
-          // check if end time is in range of any following uvtArr elements
-          if(i < uvtArr.length && uvtArr.length !== 1) {
+        if(i < uvtArr.length - 1) {
+          if(obj.endTime >= uvtArr[i+1].startTime && obj.endTime <= uvtArr[i+1].endTime) {
+            // console.log('later end time of same start time');
+            // console.log(i);
+            // check if end time is in range of any following uvtArr elements
+
             if(obj.endTime > uvtArr[i+1].startTime) {
               uvtArr[i].endTime = uvtArr[i+1].endTime
               // console.log(uvtArr);
@@ -239,10 +227,13 @@ $( () => {
               return true
             }
           }
-
           uvtArr[i].endTime = obj.endTime
           // return true to prevent pushing of new object
           return true
+        } else {
+          if(obj.endTime > uvtArr[i].endTime) {
+            uvtArr[i].endTime = obj.endTime
+          }
         }
         return true
       } else if(obj.startTime === uvtArr[i].endTime) { // check if start time matches an end time
@@ -258,39 +249,6 @@ $( () => {
     return false
   }
 
-  /////////////////////////////////////////
-  //////// Testing Variables ///////////
-
-  // testing uvtArr
-  // let uvtArr = [
-  //   {startTime: 2933, endTime: 19292},
-  //   {startTime: 15412, endTime: 19292},
-  //   {startTime: 24737, endTime: 28469}
-  // ]
-  //
-  // // obj with start and end time to test CheckStartTimeOVerlap
-  // let testObj = {startTime: 2933, endTime: 15413}
-  //
-  // let expectedUVTCheckStartOverlap = [
-  //   {startTime: 2933, endTime: 19292},
-  //   {startTime: 15412, endTime: 19292},
-  //   {startTime: 24737, endTime: 28469}
-  // ]
-  //
-  //
-  // // testing for checkStartTimeOverlap
-  // const itReturnsTrueIfStartTimeIsWithinExistingUVTAndModifiesUVTArr = (obj, expected) => {
-  //
-  // }
-  //
-  // let resultsCheckStartTimeOverLap = {
-  //   total: 0,
-  //   bad: 0
-  // }
-  //
-
-
-
 
   // checks if current time is with range of existing uvt elements
   const checkEndTimeOverlap = (obj) => {
@@ -304,7 +262,7 @@ $( () => {
         uvtArr.splice(uvtArr.indexOf(obj),1)
 
         // console.log(uvtArr[i]);
-        return
+        return true
 
       }
     }
@@ -432,85 +390,87 @@ $( () => {
     console.log(`Of ${resultsObj.total} tests, ${resultsObj.bad} failed and ${resultsObj.total - resultsObj.bad} passed`);
   }
 
-
-  // testing for convertUnitsToMs
-  const itConvertsUnitsToMs = (v1, v2, v3, expected) => {
-    resultsConvertsUnitsToMs.total++
-    let result = convertUnitsToMs(v1, v2, v3)
-    checkTestResults(result, expected, resultsConvertsUnitsToMs)
-  }
-
-  // results obj for itConvertsUnitsToMs
-  let resultsConvertsUnitsToMs = {
-    total: 0,
-    bad: 0
-  }
-
-  // test calls
-  itConvertsUnitsToMs(1,15,135, 75135)
-
-  // test response
-  logTestResults(resultsConvertsUnitsToMs)
-
-
-  // testing for convertStrUnitsToTimeStr
-  const itConvertsStrUnitsToTimeStr = (v1, v2, v3, expected) => {
-    resultsConvertStrUnitsToTimeStr.total++
-    let result = convertStrUnitsToTimeStr(v1, v2, v3)
-    checkTestResults(result, expected, resultsConvertStrUnitsToTimeStr)
-  }
-
-  // results obj for converts
-  let resultsConvertStrUnitsToTimeStr = {
-    total: 0,
-    bad: 0
-  }
-
-  // test calls
-  itConvertsStrUnitsToTimeStr('1', '15', '153', '01:15.153')
-
-  // test response
-  logTestResults(resultsConvertStrUnitsToTimeStr)
-
-
+  //
+  // // testing for convertUnitsToMs
+  // const itConvertsUnitsToMs = (v1, v2, v3, expected) => {
+  //   resultsConvertsUnitsToMs.total++
+  //   let result = convertUnitsToMs(v1, v2, v3)
+  //   checkTestResults(result, expected, resultsConvertsUnitsToMs)
+  // }
+  //
+  // // results obj for itConvertsUnitsToMs
+  // let resultsConvertsUnitsToMs = {
+  //   total: 0,
+  //   bad: 0
+  // }
+  //
+  // // test calls
+  // itConvertsUnitsToMs(1,15,135, 75135)
+  //
+  // // test response
+  // logTestResults(resultsConvertsUnitsToMs)
+  //
+  //
+  // // testing for convertStrUnitsToTimeStr
+  // const itConvertsStrUnitsToTimeStr = (v1, v2, v3, expected) => {
+  //   resultsConvertStrUnitsToTimeStr.total++
+  //   let result = convertStrUnitsToTimeStr(v1, v2, v3)
+  //   checkTestResults(result, expected, resultsConvertStrUnitsToTimeStr)
+  // }
+  //
+  // // results obj for converts
+  // let resultsConvertStrUnitsToTimeStr = {
+  //   total: 0,
+  //   bad: 0
+  // }
+  //
+  // // test calls
+  // itConvertsStrUnitsToTimeStr('1', '15', '153', '01:15.153')
+  //
+  // // test response
+  // logTestResults(resultsConvertStrUnitsToTimeStr)
+  //
+  //
   // testing for itConvertsMsToString
-  const itConvertsMsToString = (milliseconds, expected) => {
-    resultsConvertsMsToString.total++
-    let result = convertMsToString(milliseconds)
-    checkTestResults(result, expected, resultsConvertsMsToString)
-  }
-
-  // obj for itConvertsMsToString
-  let resultsConvertsMsToString = {
-    total: 0,
-    bad: 0,
-  }
-
-  // test calls
-  itConvertsMsToString(75135, '01:15.135')
-
-  // log test results
-  logTestResults(resultsConvertsMsToString)
-
-  // test for checkStrLength
-  const itChecksAndModifiesTimeUnitStrings = (string, length, expected) => {
-    resultsItChecksAndModifiesTimeUnitStrings.total++
-    let result = checkStrLength(string, length)
-    checkTestResults(result, expected, resultsItChecksAndModifiesTimeUnitStrings)
-  }
-
-  // obj for checkStrLength test
-  let resultsItChecksAndModifiesTimeUnitStrings = {
-    total: 0,
-    bad: 0
-  }
-
-  // testing calls
-  itChecksAndModifiesTimeUnitStrings('1', 2, '01')
-  itChecksAndModifiesTimeUnitStrings('', 3, '000')
-
-  // log results
-  logTestResults(resultsItChecksAndModifiesTimeUnitStrings)
+  // const itConvertsMsToString = (milliseconds, expected) => {
+  //   resultsConvertsMsToString.total++
+  //   let result = convertMsToString(milliseconds)
+  //   checkTestResults(result, expected, resultsConvertsMsToString)
+  // }
+  //
+  // // obj for itConvertsMsToString
+  // let resultsConvertsMsToString = {
+  //   total: 0,
+  //   bad: 0,
+  // }
+  //
+  // // test calls
+  // itConvertsMsToString(75135, '01:15.135')
+  // itConvertsMsToString(150153, '02:30.153')
+  // itConvertsMsToString(120153, '02:00.153')
+  //
+  // // log test results
+  // logTestResults(resultsConvertsMsToString)
+  //
+  // // test for checkStrLength
+  // const itChecksAndModifiesTimeUnitStrings = (string, length, expected) => {
+  //   resultsItChecksAndModifiesTimeUnitStrings.total++
+  //   let result = checkStrLength(string, length)
+  //   checkTestResults(result, expected, resultsItChecksAndModifiesTimeUnitStrings)
+  // }
+  //
+  // // obj for checkStrLength test
+  // let resultsItChecksAndModifiesTimeUnitStrings = {
+  //   total: 0,
+  //   bad: 0
+  // }
+  //
+  // // testing calls
+  // itChecksAndModifiesTimeUnitStrings('1', 2, '01')
+  // itChecksAndModifiesTimeUnitStrings('', 3, '000')
+  //
+  // // log results
+  // logTestResults(resultsItChecksAndModifiesTimeUnitStrings)
 
 
 
